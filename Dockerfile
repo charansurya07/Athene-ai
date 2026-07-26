@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 COPY research_ai_backend/requirements.txt .
 
 # Install dependencies
-RUN pip install --no-cache-dir setuptools wheel && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir setuptools wheel && pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
