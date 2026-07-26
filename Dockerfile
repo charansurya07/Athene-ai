@@ -12,11 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy requirements file first
+# Copy requirements from your backend folder
 COPY research_ai_backend/requirements.txt .
 
-# Install dependencies
-RUN pip install --no-cache-dir setuptools wheel && pip install --no-cache-dir --no-build-isolation -r requirements.txt
+# Install dependencies directly
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
