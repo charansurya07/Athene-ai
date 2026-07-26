@@ -12,9 +12,9 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from research_ai_backend.api.endpoints import router as research_router
-from research_ai_backend.api.websocket_voice import router as voice_router
-from research_ai_backend.config import get_settings
+from .api.endpoints import router as research_router
+from .api.websocket_voice import router as voice_router
+from .config import get_settings
 
 settings = get_settings()
 
