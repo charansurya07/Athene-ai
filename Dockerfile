@@ -1,6 +1,7 @@
 FROM python:3.11-slim
 
 WORKDIR /app
+ENV PYTHONPATH=/app
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -12,13 +13,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy requirements from your backend folder
 COPY research_ai_backend/requirements.txt .
-
-# Install dependencies directly
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
 COPY . .
 
 CMD ["uvicorn", "research_ai_backend.main:app", "--host", "0.0.0.0", "--port", "10000"]
