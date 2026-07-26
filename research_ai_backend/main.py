@@ -1,71 +1,64 @@
 """
-Athene AI — Multimodal 7-Agent Research Engine
-FastAPI application entry point.
-
+Athene AI — FastAPI Backend
 Run with:
-    uvicorn research_ai_backend.main:app --reload --port 8000
+    uvicorn main:app --reload
 """
 
-from __future__ import annotations
-
 import logging
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from research_ai_backend.config import get_settings
-from research_ai_backend.config import router as research_router
-from research_ai_backend.config import router as voice_router
-
-settings = get_settings()
-
+# Configure logging
 logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
+    level=logging.INFO,
     format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
 )
 
 logger = logging.getLogger("athene_ai")
 
 app = FastAPI(
-    title="Athene AI — Multimodal 7-Agent Research Engine",
-    description=(
-        "FastAPI + LangGraph backend powering the Athene AI frontend."
-    ),
+    title="Athene AI",
+    description="Multimodal AI Research Backend",
     version="0.1.0",
 )
 
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=["*"],  # Change this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include your API routers here
-app.include_router(research_router)
-app.include_router(voice_router)
-
 
 @app.on_event("startup")
-async def on_startup():
-    logger.info("Athene AI backend starting up (env=%s)", settings.app_env)
-
-    if not settings.anthropic_api_key:
-        logger.warning(
-            "ANTHROPIC_API_KEY is not set — agent LLM calls will fail until it is configured."
-        )
+async def startup_event():
+    logger.info("Athene AI Backend Started Successfully")
 
 
 @app.get("/")
 async def root():
     return {
-        "service": "Athene AI backend",
-        "docs": "/docs",
+        "service": "Athene AI Backend",
         "status": "running",
+        "docs": "/docs",
+        "health": "/health",
     }
 
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "message": "Backend is running successfully"
+    }
+
+
+@app.get("/api/v1/info")
+async def info():
+    return {
+        "name": "Athene AI",
+        "version": "0.1.0",
+        "framework": "FastAPI"
+    }
