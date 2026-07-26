@@ -2,7 +2,6 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies needed for OpenCV, PyMuPDF, and Whisper
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
@@ -11,15 +10,11 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install setuptools/wheel first
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy requirements and install them safely
 COPY research_ai_backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your app code
 COPY . .
 
-# Command to run your FastAPI/Uvicorn server
 CMD ["uvicorn", "research_ai_backend.main:app", "--host", "0.0.0.0", "--port", "10000"]
